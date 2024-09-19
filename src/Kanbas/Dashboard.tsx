@@ -8,7 +8,7 @@ export default function Dashboard() {
                 <div className="wd-dashboard-course">
                     <Link className="wd-dashboard-course-link"
                           to="/Kanbas/Courses/1234/Home">
-                        <img src="/images/reactjs.jpg" width={200} />
+                        <img src="/images/reactjs.jpg" alt="react" width={200} />
                         <div>
                             <h5>
                                 CS1234 React JS
@@ -24,7 +24,7 @@ export default function Dashboard() {
                 <div className="wd-dashboard-course">
                     <Link className="wd-dashboard-course-link"
                           to="/Kanbas/Courses/5610/Home">
-                        <img src="/images/webdev.jpg" width={200} height={100}/>
+                        <img src="/images/webdev.jpg" alt="web dev" width={200} height={100}/>
                         <div>
                             <h5>
                                 CS5610 Web Development
@@ -40,7 +40,7 @@ export default function Dashboard() {
                 <div className="wd-dashboard-course">
                     <Link className="wd-dashboard-course-link"
                           to="/Kanbas/Courses/5800/Home">
-                        <img src="/images/algorithm1.jpg" width={200} height={100} />
+                        <img src="/images/algorithm1.jpg" alt="algorithm" width={200} height={100} />
                         <div>
                             <h5>
                                 CS5800 Algorithm
@@ -56,7 +56,7 @@ export default function Dashboard() {
                 <div className="wd-dashboard-course">
                     <Link className="wd-dashboard-course-link"
                           to="/Kanbas/Courses/5008/Home">
-                        <img src="/images/algorithm2.jpg" width={200} height={100} />
+                        <img src="/images/algorithm2.jpg" alt="algorithm" width={200} height={100} />
                         <div>
                             <h5>
                                 CS5008 Algorithms
@@ -72,7 +72,7 @@ export default function Dashboard() {
                 <div className="wd-dashboard-course">
                     <Link className="wd-dashboard-course-link"
                           to="/Kanbas/Courses/5002/Home">
-                        <img src="/images/discrete.jpg" width={200} height={100}/>
+                        <img src="/images/discrete.jpg" alt="discrete" width={200} height={100}/>
                         <div>
                             <h5>
                                 CS5002 Discrete Structures
@@ -88,7 +88,7 @@ export default function Dashboard() {
                 <div className="wd-dashboard-course">
                     <Link className="wd-dashboard-course-link"
                           to="/Kanbas/Courses/5001/Home">
-                        <img src="/images/python.jpg" width={200} height={100}/>
+                        <img src="/images/python.jpg" alt="python" width={200} height={100}/>
                         <div>
                             <h5>
                                 CS5001 Python
@@ -104,7 +104,7 @@ export default function Dashboard() {
                 <div className="wd-dashboard-course">
                     <Link className="wd-dashboard-course-link"
                           to="/Kanbas/Courses/5007/Home">
-                        <img src="/images/java.jpg" width={200} height={100}/>
+                        <img src="/images/java.jpg" alt="java" width={200} height={100}/>
                         <div>
                             <h5>
                                 CS5007 Java

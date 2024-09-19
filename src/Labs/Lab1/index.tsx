@@ -121,6 +121,7 @@ export default function Lab1() {
                 <br />
                 <img id="wd-starship"
                     width="400px"
+                    alt="starship"
                 src="https://www.staradvertiser.com/wp-content/uploads/2021/08/web1_Starship-gap2.jpg"
                 />
                 <br />

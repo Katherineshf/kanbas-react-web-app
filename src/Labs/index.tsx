@@ -16,9 +16,6 @@ export default function Labs() {
                 <Route path="Lab2" element={<Lab2 />} />
                 <Route path="Lab3" element={<Lab3 />} />
             </Routes>
-            <a id="wd-netlify" href="https://main--spiffy-bienenstitch-5c14a1.netlify.app/#/Labs">Kanbas Application</a>
-            <a id="wd-github" href="https://github.com/Katherineshf/kanbas-react-web-app">GitHub
-            </a>
         </div>
     );
 }

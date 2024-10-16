@@ -2,7 +2,13 @@ import { BsGripVertical } from "react-icons/bs";
 import { GoSearch } from "react-icons/go";
 import { PiNotePencilDuotone } from "react-icons/pi";
 import LessonControlButtons from "../Modules/LessonControlButton";
+import { useParams, Link } from "react-router-dom";
+import * as db from "../../Database";
 export default function Assignments() {
+    const { cid } = useParams();
+    console.log(cid);
+    const assignments = db.assignments;
+    const courseAssignments = assignments.filter(assignment => assignment.course === cid);
     return (
         <div id="wd-assignments" >
             <div className="row">
@@ -21,8 +27,8 @@ export default function Assignments() {
             <br /><br /><br />
 
             <ul id="wd-assignments" className="list-group rounded-0">
-                <li className="list-group-item p-0 mb-0 border-gray border-bottom-0">
-                    <div>
+                <li className="list-group-item p-0 mb-0 border-gray border-bottom-0" style={{ margin: 0, padding: 0 }}>
+                    <div style={{ backgroundColor: "grey", margin: 0, padding: 0 }}>
                         <h3 id="wd-assignments-title" className="wd-title p-3 ps-2">
                         <BsGripVertical className="me-2 fs-3" />
                          ASSIGNMENT 
@@ -30,56 +36,24 @@ export default function Assignments() {
                         </h3>
                     </div>
                 </li>
+                {/*From here above are for the grey ASSIGNMENT box*/}
 
                 <ul id="wd-assignment-list" className="list-group rounded-0">
-                    <li className="wd-assignment-list-item list-group-item pt-3 ps-1">
-                        <BsGripVertical className="me-1 mt-3 fs-3"/>
-                        <PiNotePencilDuotone className="text-success" 
-                            style={{fontSize: "25px"}} />
+                    {courseAssignments.map((assignment) => (
+                        <li key={assignment._id} className="list-group-item pt-3 ps-1">
+                            <BsGripVertical className="me-1 mt-3 fs-3"/>
+                            <PiNotePencilDuotone className="text-success" style={{fontSize: "25px"}} />
+                            <Link id="wd-assignment-link" className="ms-3 fw-bold fs-5 text-dark text-decoration-none"
+                                to={`/Kanbas/Courses/${cid}/Assignment/${assignment._id}`}>
+                                {assignment.title}<LessonControlButtons />
+                            </Link>
+                            <p className="ms-5">
+                                <span className="text-danger">Multiple Modules</span> | <span id="Bold">Not Available until</span> May 6 at 12:00am  |<br/>
+                                <span id="Bold">Due</span> May 13 at 11:59pm  | 100 pts
+                            </p>
 
-                        <a id="wd-assignment-link"
-                            className="ms-3 fw-bold fs-5 text-dark text-decoration-none"
-                            href="#/Kanbas/Courses/1234/Assignments/123">A1
-                            <LessonControlButtons />
-                        </a>
-                        <p className="ms-5">
-                            <span className="text-danger">Multiple Modules</span> | <span id="Bold">Not Available until</span> May 6 at 12:00am  |<br/>
-                            <span id="Bold">Due</span> May 13 at 11:59pm  | 100 pts
-                        </p>
-                    </li>
-
-                    <li className="wd-assignment-list-item list-group-item p-3 ps-1">
-                        <BsGripVertical className="me-1 mt-3 fs-3" />
-                        <PiNotePencilDuotone className="text-success"
-                            style={{fontSize: "25px"}}/>
-
-                        <a id="wd-assignment-link"
-                            className="ms-3 fw-bold fs-5 text-dark text-decoration-none"
-                            href="#/Kanbas/Courses/1234/Assignments/222">A2
-                            <LessonControlButtons />
-                        </a>
-                        <p className="ms-5">
-                            <span className="text-danger">Multiple Modules</span> | <span id="Bold">Not Available until</span> May 13 at 12:00am  |<br/>
-                            <span id="Bold">Due</span> May 20 at 11:59pm  | 100 pts
-                        </p>
-                    </li>
-
-                    <li className="wd-assignment-list-item list-group-item p-3 ps-1">
-                        <BsGripVertical className="me-1 mt-3 fs-3" />
-                        <PiNotePencilDuotone className="text-success"
-                            style={{fontSize: "25px"}}/>
-
-                        <a id="wd-assignment-link"
-                            className="ms-3 fw-bold fs-5 text-dark text-decoration-none"
-                            href="#/Kanbas/Courses/1234/Assignments/333">
-                            A3
-                            <LessonControlButtons />
-                        </a>
-                        <p className="ms-5">
-                            <span className="text-danger">Multiple Modules</span> | <span id="Bold">Not Available until</span> May 20 at 12:00am  |<br/>
-                            <span id="Bold">Due</span> May 27 at 11:59pm  | 100 pts
-                        </p>
-                    </li>
+                        </li>
+                    ))}
            
             </ul>
             </ul>

@@ -11,10 +11,10 @@ export default function Labs() {
             <TOC />
             <Routes>
                 <Route path="/" element={<Navigate to="Labs" />} />
-                <Route path="Labs" element={<Labs />} />
+                {/*<Route path="Labs" element={<Labs />} /> */}
                 <Route path="Lab1" element={<Lab1 />} />
                 <Route path="Lab2" element={<Lab2 />} />
-                <Route path="Lab3" element={<Lab3 />} />
+                <Route path="Lab3/*" element={<Lab3 />} />
             </Routes>
         </div>
     );

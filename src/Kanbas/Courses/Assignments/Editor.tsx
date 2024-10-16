@@ -1,19 +1,24 @@
+import React from 'react';
+import { useParams, Link } from 'react-router-dom';
+import * as db from "../../Database";
+
 export default function AssignmentEditor() {
+    const { cid, id } = useParams();
+    const course = db.courses.find((course) => course._id === cid);
+    const assignment = db.assignments.find((assignment) => assignment._id === id && assignment.course === cid);
     return (
         <div id="wd-assignments-editor" className="m-5">
             <div className="row mb-4">
                 <label htmlFor="wd-name" className="colcol-form-label">Assignment Name</label> 
                 <div className="col-sm">
-                    <input id="wd-name" value="A1" className="form-control mb-3"/>
+                    <input id="wd-name" value={assignment?.title} className="form-control mb-3" />
                     <textarea className="form-control" rows={5}>
-                        The assignment is available online Submit a link to the landing page of your web application running on Netlify.
-                        The assignment is available online Submit a link to the landing page of your web application running on Netlify.
-                        The assignment is available online Submit a link to the landing page of your web application running on Netlify.
+                        {course?.description}
                     </textarea> 
                 </div>
             </div> 
   
-                  
+                
    
                
             <div className="row mb-3">
@@ -94,7 +99,7 @@ export default function AssignmentEditor() {
                         <input type="text" id="wd-assign-to" placeholder="Everyone" className="form-control"/>
                         <label htmlFor="wd-due-date" className="col-sm-3 col-form-label mt-1">Due</label>
                         <div className="col-sm">
-                            <input type="date" id="wd-due-date" value="05-13-2024" className="form-control"/>
+                            <input type="date" id="wd-due-date" value={course?.endDate} className="form-control" />
                         </div>
 
                         <div className="row align-items-start"> 
@@ -114,18 +119,16 @@ export default function AssignmentEditor() {
                         </div>
                     </div>
                 </div>
-            </div>       
-                   
-       
+            </div>        
             <hr/>
             <div className="d-flex flex-row" id="assignment-form-buttons-container">
                 <div className="ms-auto">
-                    <button className="btn btn-secondary me-1">
-                        Cancel
-                    </button>
-                    <button className="btn btn-danger me-2">
-                        Save
-                    </button>
+                    <Link to={`/courses/${cid}/assignments`}>
+                        <button className="btn btn-secondary me-1">Cancel</button>
+                    </Link>
+                    <Link to={`/courses/${cid}/assignments`}>
+                        <button className="btn btn-danger me-2">Save</button>
+                    </Link>
                 </div>
             </div>              
         </div>

@@ -11,7 +11,7 @@ export default function AssignmentEditor() {
             <div className="row mb-4">
                 <label htmlFor="wd-name" className="colcol-form-label">Assignment Name</label> 
                 <div className="col-sm">
-                    <input id="wd-name" value={assignment?.title} className="form-control mb-3" />
+                    <input id="wd-name" defaultValue={assignment?.title} className="form-control mb-3" />
                     <textarea className="form-control" rows={5}>
                         {course?.description}
                     </textarea> 

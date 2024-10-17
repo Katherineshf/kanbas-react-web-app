@@ -3,9 +3,9 @@ import { useParams, Link } from 'react-router-dom';
 import * as db from "../../Database";
 
 export default function AssignmentEditor() {
-    const { cid, id } = useParams();
+    const { cid, aid } = useParams();
     const course = db.courses.find((course) => course._id === cid);
-    const assignment = db.assignments.find((assignment) => assignment._id === id && assignment.course === cid);
+    const assignment = db.assignments.find((assignment) => assignment._id === aid && assignment.course === cid);
     return (
         <div id="wd-assignments-editor" className="m-5">
             <div className="row mb-4">
@@ -16,11 +16,7 @@ export default function AssignmentEditor() {
                         {course?.description}
                     </textarea> 
                 </div>
-            </div> 
-  
-                
-   
-               
+            </div>       
             <div className="row mb-3">
                 <label htmlFor="wd-points" className="col-sm-3 col-form-label">Points</label>
                 <div className="col-sm-9">
@@ -106,7 +102,7 @@ export default function AssignmentEditor() {
                             <div className="col">
                                 <label htmlFor="wd-available-from" className="col-md col-form-label mt-1">Available from</label>
                                 <div className="col-sm-9">
-                                    <input type="date" id="wd-from" className="form-control mb-3"/> 
+                                    <input type="date" id="wd-from" value={course?.startDate} className="form-control mb-3"/> 
                                 </div>
                             </div>
 
@@ -123,10 +119,10 @@ export default function AssignmentEditor() {
             <hr/>
             <div className="d-flex flex-row" id="assignment-form-buttons-container">
                 <div className="ms-auto">
-                    <Link to={`/courses/${cid}/assignments`}>
+                    <Link to={`/Kanbas/Courses/${cid}/Assignments`}>
                         <button className="btn btn-secondary me-1">Cancel</button>
                     </Link>
-                    <Link to={`/courses/${cid}/assignments`}>
+                    <Link to={`/Kanbas/Courses/${cid}/Assignments`}>
                         <button className="btn btn-danger me-2">Save</button>
                     </Link>
                 </div>

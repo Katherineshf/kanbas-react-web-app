@@ -40,8 +40,12 @@ export default function ModulesControls() {
                 </ul>
             </div>
             {/*Some floating problems*/}
-            <button id="wd-collapse-all" className="btn btn-lg btn-secondary float-left me-1">Collapse All</button>
-            <button id="wd-view-progress" className="btn btn-lg btn-secondary float-left me-1">View Progress</button>
+            <button id="wd-collapse-all" className="btn btn-lg btn-secondary float-left me-1">
+                Collapse All
+            </button>
+            <button id="wd-view-progress" className="btn btn-lg btn-secondary float-left me-1">
+                View Progress
+            </button>
         </div>
     );
 }

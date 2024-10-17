@@ -26,6 +26,7 @@ export default function Assignments() {
             </div>
             <br /><br /><br />
 
+{/*I added margin and padding 0, still not working */}
             <ul id="wd-assignments" className="list-group rounded-0">
                 <li className="list-group-item p-0 mb-0 border-gray border-bottom-0" style={{ margin: 0, padding: 0 }}>
                     <div style={{ backgroundColor: "grey", margin: 0, padding: 0 }}>
@@ -44,7 +45,7 @@ export default function Assignments() {
                             <BsGripVertical className="me-1 mt-3 fs-3"/>
                             <PiNotePencilDuotone className="text-success" style={{fontSize: "25px"}} />
                             <Link id="wd-assignment-link" className="ms-3 fw-bold fs-5 text-dark text-decoration-none"
-                                to={`/Kanbas/Courses/${cid}/Assignment/${assignment._id}`}>
+                                to={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}>
                                 {assignment.title}<LessonControlButtons />
                             </Link>
                             <p className="ms-5">

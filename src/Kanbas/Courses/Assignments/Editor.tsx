@@ -1,18 +1,67 @@
-import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import * as db from "../../Database";
+import { useDispatch, useSelector } from 'react-redux';
+import { addAssignment, updateAssignment } from './reducer';
 
 export default function AssignmentEditor() {
     const { cid, aid } = useParams();
     const course = db.courses.find((course) => course._id === cid);
     const assignment = db.assignments.find((assignment) => assignment._id === aid && assignment.course === cid);
+    
+    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const initialAssignmentData = {
+        title: "",
+        description: "",
+        points: 100,
+        dueDate: "",
+        availableFrom: "",
+        availableUntil: ""
+    };
+    //Set up state based on whether editing or adding
+    const [assignmentData, setAssignmentData] = useState(initialAssignmentData);
+    
+    //Populate form if editing an existing assignment
+    //I made some changes on this useEffect
+    useEffect(() => {
+        if (aid && assignment) {
+            setAssignmentData({
+                title: assignment.title,
+                description: assignment.description,
+                points: assignment.points,
+                dueDate: assignment.dueDate,
+                availableFrom: assignment.availableFrom,
+                availableUntil: assignment.availableUntil
+            });
+            
+        }
+    }, [aid, assignment]);
+
+    const handleSave = () => {
+        if (aid) {
+            dispatch(updateAssignment({ ...assignmentData, _id: aid, course: cid }));
+        } else {
+            dispatch(addAssignment({ ...assignmentData, course: cid }));
+        }
+        navigate(`/Kanbas/Courses/${cid}/Assignments`);
+    };
+
+
+
     return (
         <div id="wd-assignments-editor" className="m-5">
             <div className="row mb-4">
                 <label htmlFor="wd-name" className="colcol-form-label">Assignment Name</label> 
                 <div className="col-sm">
-                    <input id="wd-name" defaultValue={assignment?.title} className="form-control mb-3" />
-                    <textarea className="form-control" rows={5}>
+                <input id="wd-name" value={assignmentData.title} className="form-control mb-3"
+                        onChange={(e) => setAssignmentData({ ...assignmentData, title: e.target.value })} />
+                    <textarea className="form-control" rows={5}
+                        onChange={(e) => setAssignmentData({ ...assignmentData, description: e.target.value })}>
                         {course?.description}
                     </textarea> 
                 </div>
@@ -20,7 +69,8 @@ export default function AssignmentEditor() {
             <div className="row mb-3">
                 <label htmlFor="wd-points" className="col-sm-3 col-form-label">Points</label>
                 <div className="col-sm-9">
-                    <input id="wd-points" value={100} className="form-control" />
+                <input id="wd-points" value={assignmentData.points} className="form-control"
+                        onChange={(e) => setAssignmentData({...assignmentData, points: parseInt(e.target.value)})} />
                 </div><br/><br/>
 
                 <label htmlFor="wd-group" className="col-sm-3 col-form-label">Assignment Group</label>
@@ -95,21 +145,24 @@ export default function AssignmentEditor() {
                         <input type="text" id="wd-assign-to" placeholder="Everyone" className="form-control"/>
                         <label htmlFor="wd-due-date" className="col-sm-3 col-form-label mt-1">Due</label>
                         <div className="col-sm">
-                            <input type="date" id="wd-due-date" value={course?.endDate} className="form-control" />
+                            <input type="date" id="wd-due-date" value={assignment?.dueDate} className="form-control"
+                                onChange={(e) => setAssignmentData({...assignmentData, dueDate: e.target.value})} />
                         </div>
 
                         <div className="row align-items-start"> 
                             <div className="col">
                                 <label htmlFor="wd-available-from" className="col-md col-form-label mt-1">Available from</label>
                                 <div className="col-sm-9">
-                                    <input type="date" id="wd-from" value={course?.startDate} className="form-control mb-3"/> 
+                                    <input type="date" id="wd-from" value={assignment?.availableFrom} className="form-control mb-3"
+                                        onChange={(e) => setAssignmentData({...assignmentData, availableFrom: e.target.value})}  /> 
                                 </div>
                             </div>
 
                             <div className="col">
                                 <label htmlFor="wd-available-until" className="col-sm-3 col-form-label mt-1">Until</label>
                                 <div>
-                                    <input type="date" id="wd-until" className="form-control mb-3"/> 
+                                    <input type="date" id="wd-until" value={assignment?.availableUntil} className="form-control mb-3"
+                                        onChange={(e) => setAssignmentData({...assignmentData, availableUntil: e.target.value})} /> 
                                 </div> 
                             </div>
                         </div>
@@ -123,7 +176,7 @@ export default function AssignmentEditor() {
                         <button className="btn btn-secondary me-1">Cancel</button>
                     </Link>
                     <Link to={`/Kanbas/Courses/${cid}/Assignments`}>
-                        <button className="btn btn-danger me-2">Save</button>
+                        <button onClick={handleSave} className="btn btn-danger me-2">Save</button>
                     </Link>
                 </div>
             </div>              

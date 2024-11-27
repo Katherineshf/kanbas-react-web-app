@@ -4,7 +4,7 @@ import { FaTrash } from "react-icons/fa";
 import { deleteAssignment } from "./reducer";
 import { useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-
+import * as assignmentsClient from "./client";
 interface AssignmentControlButtonsProps {
   assignmentId: string; // Define the prop type
 }
@@ -17,13 +17,16 @@ export default function AssignmentControlButtons(
   const navigate = useNavigate();
   const { cid } = useParams();
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (window.confirm("Are you sure you want to remove the assignment?")) {
-        console.log("Deleting assignment:", assignmentId);
-        dispatch(deleteAssignment(assignmentId));
-        console.log("Deleted assignment. Checking state");
-        navigate(`/Kanbas/Courses/${cid}/Assignments`);
+      try {
+          await assignmentsClient.deleteAssignment(assignmentId);
+          dispatch(deleteAssignment(assignmentId));
+          navigate(`/Kanbas/Courses/${cid}/Assignments`);
+      } catch (error) {
+          console.error("Error deleting assignment:", error);
       }
+  }
 };
 
   return (

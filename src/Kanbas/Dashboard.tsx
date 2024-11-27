@@ -1,8 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import * as db from "./Database";
+//import * as db from "./Database";
 import { toggleShowAllCourses, enrollStudent, unenrollStudent } from "./Account/Enrollment/reducer";
+import { enrollInCourse } from "./Account/Enrollment/client";
 
 
 export default function Dashboard({ courses, course, setCourse, addNewCourse,
@@ -11,59 +12,31 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
         addNewCourse: () => void; deleteCourse: (course: any) => void;
         updateCourse: () => void; }){
     const {currentUser} = useSelector((state: any) => state.accountReducer);
-    const {enrollments} = db;
+    const { showAllCourses } = useSelector((state: any) => state.enrollmentReducer) || { showAllCourses: false };
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const hasEditAccess = currentUser?.role === "FACULTY";
-
-    const  enrollmentState  = useSelector((state: any) => state.enrollmentReducer);
-    const { showAllCourses } = enrollmentState || { enrollments: [], showAllCourses: false };
     const isStudent = currentUser?.role === "STUDENT";
+
+    //const {enrollments} = db;
+
+    //const  enrollmentState  = useSelector((state: any) => state.enrollmentReducer);
+    //const { showAllCourses } = enrollmentState || { enrollments: [], showAllCourses: false };
+
 
     //const enrolled = enrollments.includes(course._id);
     //const [showEnrollments, setShowEnrollments] = useState(false);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
 
-    const isEnrolled = (courseId: string) => {
-        return enrollments.some(
-          (enrollment: any) => 
-            enrollment.user === currentUser._id && 
-            enrollment.course === courseId
-        );
-    };
     const handleCourse = (courseId: string) => {
-        if (isStudent) {
-          const isEnrolled = enrollments.some(
-            (enrollment: any) => 
-              enrollment.user === currentUser._id && 
-              enrollment.course === courseId
-          );
-          if (!isEnrolled) {
-            return;
-          }
-        }
         navigate(`/Kanbas/Courses/${courseId}/Home`);
-      };
-
-
-
-    const handleEnroll = (courseId: string) => {
-        if (isEnrolled(courseId)) {
-          dispatch(unenrollStudent({ userId: currentUser._id, courseId }));
-        } else {
-          dispatch(enrollStudent({ userId: currentUser._id, courseId }));
-        }
     };
 
+    const handleEnroll = async (courseId: string) => {
+        await enrollInCourse(currentUser._id, courseId);
+        dispatch(enrollStudent({ userId: currentUser._id, courseId }));
+    };
 
-    const displayedCourses = showAllCourses || currentUser.role !== "STUDENT"
-    ? courses 
-    : courses.filter((course) => 
-        enrollments.some(
-          (enrollment: any) => 
-            enrollment.user === currentUser._id && 
-            enrollment.course === course._id
-        )
-      );
+    const displayedCourses = showAllCourses || currentUser.role !== "STUDENT" ? courses : courses;
 
     return(
         <div id="wd-dashboard">
@@ -112,13 +85,10 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
             <h2 id="wd-dashboard-published">Published Course ({displayedCourses.length})</h2> <hr />
             <div id="wd-dashboard-courses" className="row">
                 <div className="row row-cols-1 row-cols-md-5 g-4">
-                    {displayedCourses.filter((course) => enrollments.some((enrollment: { user: any; course: any; }) => 
-                        enrollment.user === currentUser._id && enrollment.course === course._id))
-                    .map((course) => (
-                        <div className="wd-dashboard-course col" style={{ width: "300px" }}>
+                    {displayedCourses.map((course) => (
+                        <div className="wd-dashboard-course col" style={{ width: "300px" }} key={course._id}>
                             <div className="card rounded-3 overflow-hidden">
-                                <Link className="wd-dashboard-course-link text-decoration-none text-dark"
-                                    to={`/Kanbas/Courses/${course._id}/Home`}>
+                                <div className="wd-dashboard-course-link text-decoration-none text-dark">
                                     <img src="/images/reactjs.jpg" alt="react" width="100%" height={160} />
                                     <div className="card-body">
                                         <h5 className="wd-dashboard-course-title card-title">
@@ -127,8 +97,6 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                         <p className="wd-dashboard-course-title card-text overflow-y-hidden" style={{maxHeight: 100}}>
                                             {course.description}
                                         </p>
-
-
 
                                         <div className="d-flex justify-content-between align-items-center">
                                             {/**
@@ -140,16 +108,17 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                              </button>
                                              */}
                                             {isStudent && (
-                                                <button 
-                                                className={`btn ${isEnrolled(course._id) ? 'btn-danger' : 'btn-success'}`}
-                                                onClick={() => handleEnroll(course._id)}
+                                                <button
+                                                    className="btn btn-success"
+                                                    onClick={() => handleEnroll(course._id)}
                                                 >
-                                                {isEnrolled(course._id) ? 'Unenroll' : 'Enroll'}
+                                                    Enroll
                                                 </button>
                                             )}
 
-
-                                            <button className="btn btn-primary"> Go </button>
+                                            <button className="btn btn-primary"  onClick={() => handleCourse(course._id)}> 
+                                            Go 
+                                            </button>
                                         
 
                                             {hasEditAccess && (
@@ -172,7 +141,7 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                             )}
                                         </div>
                                     </div>
-                                </Link>
+                                </div>
                             </div>
                         </div>
                     ))}

@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import * as db from "../../Database";
+//import * as db from "../../Database";
 import { useDispatch, useSelector } from 'react-redux';
 import { addAssignment, updateAssignment } from './reducer';
-
+import * as assignmentsClient from "./client";
 export default function AssignmentEditor() {
     const { cid, aid } = useParams();
-    const course = db.courses.find((course) => course._id === cid);
-    const assignment = db.assignments.find((assignment) => assignment._id === aid && assignment.course === cid);
-    
-    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
-
-
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    //const course = db.courses.find((course) => course._id === cid);
+    //const assignment = db.assignments.find((assignment) => assignment._id === aid && assignment.course === cid);
+    
+    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+    const assignment = assignments.find(
+        (a: any) => a._id === aid && a.course === cid
+    );
+
+    //    const [assignmentTitle, setAssignmentTitle] = useState("");
+
 
     const initialAssignmentData = {
         title: "",
@@ -42,16 +46,28 @@ export default function AssignmentEditor() {
         }
     }, [aid, assignment]);
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (aid) {
-            dispatch(updateAssignment({ ...assignmentData, _id: aid, course: cid }));
+            const updatedAssignment = await assignmentsClient.updateAssignment({ 
+                ...assignmentData, 
+                _id: aid, 
+                course: cid 
+            });
+            dispatch(updateAssignment(updatedAssignment));        
         } else {
-            dispatch(addAssignment({ ...assignmentData, course: cid }));
+            const newAssignment = await assignmentsClient.createAssignment({ 
+                ...assignmentData, 
+                course: cid 
+            });
+            dispatch(addAssignment(newAssignment));
         }
         navigate(`/Kanbas/Courses/${cid}/Assignments`);
     };
 
-
+   // const saveAssignment = async (assignment: any) => {
+     //   await assignmentsClient.updateAssignment(assignment);
+       // dispatch(updateAssignment(assignment));
+    //};
 
     return (
         <div id="wd-assignments-editor" className="m-5">
@@ -62,7 +78,7 @@ export default function AssignmentEditor() {
                         onChange={(e) => setAssignmentData({ ...assignmentData, title: e.target.value })} />
                     <textarea className="form-control" rows={5}
                         onChange={(e) => setAssignmentData({ ...assignmentData, description: e.target.value })}>
-                        {course?.description}
+                        {assignmentData.description}
                     </textarea> 
                 </div>
             </div>       
@@ -176,7 +192,10 @@ export default function AssignmentEditor() {
                         <button className="btn btn-secondary me-1">Cancel</button>
                     </Link>
                     <Link to={`/Kanbas/Courses/${cid}/Assignments`}>
-                        <button onClick={handleSave} className="btn btn-danger me-2">Save</button>
+                        <button onClick={handleSave} className="btn btn-danger me-2"
+                           >
+                            Save
+                        </button>
                     </Link>
                 </div>
             </div>              

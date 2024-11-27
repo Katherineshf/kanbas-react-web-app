@@ -3,36 +3,43 @@ import { GoSearch } from "react-icons/go";
 import { PiNotePencilDuotone } from "react-icons/pi";
 import AssignmentControlButtons from "./AssignmentControlButtons";
 import { useParams, Link, useNavigate } from "react-router-dom";
-//import * as db from "../../Database";
-
-
-import { addAssignment, deleteAssignment, updateAssignment } from "./reducer";
 import { useSelector, useDispatch } from "react-redux";
 import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
-
+import { setAssignments, addAssignment, deleteAssignment, updateAssignment } from "./reducer";
+import { useState, useEffect } from "react";
+//import * as coursesClient from "../client";
+import * as assignmentsClient from "./client";
+import * as coursesClient from "../client";
 
 export default function Assignments() {
     const { cid } = useParams();
-    //console.log(cid);
-    //const assignments = db.assignments;
-    //const courseAssignments = assignments.filter(assignment => assignment.course === cid);
-
     const navigate = useNavigate();
+    const [assignmentTitle, setAssignmentTitle] = useState("");
     const {assignments} = useSelector((state: any) =>state.assignmentsReducer);
     const dispatch = useDispatch();
+    
     const courseAssignments = assignments.filter((assignment: { course: string | undefined; }) => assignment.course === cid);
-    //const courseAssignments = assignments.filter(assignment => assignment.course === cid);
-
     const handleAddAssignment = () => {
         navigate(`/Kanbas/Courses/${cid}/Assignments/Editor`);
     };
 
-   // const handleDeleteAssignment = () => {
-
-   // };
-
    const { currentUser } = useSelector((state: any) => state.accountReducer);
    const hasEditAccess = currentUser?.role === "FACULTY";
+
+   const fetchAssignments = async () => {
+        const assignments = await assignmentsClient.findAssignmentsForCourse(cid as string);
+        dispatch(setAssignments(assignments));
+    };
+    useEffect(() => {
+        if (cid) {
+            fetchAssignments();
+        }
+    }, [cid]);
+
+    const removeAssignment = async (assignmentId: string) => {
+        await assignmentsClient.deleteAssignment(assignmentId);
+        dispatch(deleteAssignment(assignmentId));
+    };
 
     return (
         <div id="wd-assignments" >    
@@ -56,7 +63,6 @@ export default function Assignments() {
             </div>
             <br /><br /><br />
 
-
             {/*I added margin and padding 0, still not working */}
             <ul id="wd-assignments" className="list-group rounded-0">
                 <li className="list-group-item p-0 mb-0 border-gray border-bottom-0" style={{ margin: 0, padding: 0 }}>
@@ -68,7 +74,7 @@ export default function Assignments() {
                         </h3>
                     </div>
                 </li>
-                {/*From here above are for the grey ASSIGNMENT box*/}
+ {/*------From here above are for the grey ASSIGNMENT box------------------------------*/}
 
                 <ul id="wd-assignment-list" className="list-group rounded-0">
                     {courseAssignments.map((assignment: { _id: Key | null | undefined; title: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; }) => (
@@ -106,16 +112,3 @@ export default function Assignments() {
         
     );
 }
-
-
-
-{/**
-                            <Link id="wd-assignment-link" className="ms-3 fw-bold fs-5 text-dark text-decoration-none"
-                                to={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}>
-                                {assignment.title}
-                                {hasEditAccess && (
-                                    <AssignmentControlButtons assignmentId={assignment._id as string}/>
-                                )}
-                            </Link>
-
-*/}

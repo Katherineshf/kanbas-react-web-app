@@ -47,6 +47,11 @@ export default function TOC() {
             className="nav-link">GitHub
           </a>
         </li>
+        <li className="nav-item">            
+          <a id="wd-heroku" href="https://kanbas-node-server-app-sp24-test-2.onrender.com/"
+            className="nav-link">Heroku
+          </a>
+        </li>
       </ul>
     );
 }  

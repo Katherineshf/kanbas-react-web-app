@@ -1,12 +1,14 @@
 import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { Navigate } from "react-router";
 
+function ProtectedRoute({ children }: { children: any }) {
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const { enrollments } = useSelector((state: any) => state.enrollmentsReducer || { enrollments: [] });
 
-export default function ProtectedRoute({children}: {children: any}) {
-    const {currentUser} = useSelector((state: any) => state.accountReducer);
-    if (currentUser) {
-        return children;
-    } else {
-        return <Navigate to="/Kanbas/Account/Signin" />;
-    }
+  if (!currentUser) {
+    return <Navigate to="/Kanbas/Account/Login" />;
+  }
+  return children;
 }
+
+export default ProtectedRoute;
